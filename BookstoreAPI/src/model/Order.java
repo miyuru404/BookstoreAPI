@@ -22,6 +22,5 @@ public class Order {
 
     public void setOrderId(int orderId) {this.orderId = orderId;}
     public void setCustomerId(Customer customer) {this.customer = customer;}
-    //public void setOrderDate(LocalDateTime orderDate) {this.orderDate = orderDate;}
     public void setTotalAmount(double totalAmount) {this.totalAmount = totalAmount;}
 }
