@@ -5,7 +5,7 @@ public class Book {
     private String author;
     private int ISBN;
     private String publicationYear;
-    private int price;
+    private double price;
     private int stockQuantity;
 
     public Book() {}
@@ -22,7 +22,7 @@ public class Book {
     public String getAuthor() {return author;}
     public int getISBN() {return ISBN;}
     public String getPublicationYear() {return publicationYear;}
-    public int getPrice() {return price;}
+    public double getPrice() {return price;}
     public int getStockQuantity() {return stockQuantity;}
 
     public void setTitle(String title) {this.title = title;}
