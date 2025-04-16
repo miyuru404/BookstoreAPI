@@ -5,7 +5,7 @@ import java.util.List;
 public class Cart {
     private Customer customer ;
     private List<Book> items;
-    private double valueOfTheCart;
+    private double cartValue;
 
     public Cart(Customer customer, List<Book> items) {
         this.customer = customer;
@@ -13,15 +13,13 @@ public class Cart {
     }
     public Customer getCustomer() {return customer;}
     public List<Book> getItems() {return items;}
-    public double getValueOfTheCart() { return valueOfTheCart; }
+    public double getValueOfTheCart() { return cartValue; }
 
-    public void setValueOfTheCart() { this.valueOfTheCart =  calculateTotal(); }
-    public double calculateTotal() {
-        double total = 0.0;
+    public double cartValue() {
         for (Book book : items) {
-            total += book.getPrice();
+            cartValue += book.getPrice();
         }
-        return total;
+        return cartValue;
     }
     public void clearCart(){items.clear();}
 

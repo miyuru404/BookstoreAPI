@@ -8,6 +8,7 @@ public class Order {
     private Customer customer;
     private LocalDateTime orderDate;
     private double totalAmount;
+    private Cart cart;
 
     public Order(int orderId, Customer customer, List<Cart> items, LocalDateTime orderDate) {
         this.orderId = orderId;
@@ -22,5 +23,5 @@ public class Order {
 
     public void setOrderId(int orderId) {this.orderId = orderId;}
     public void setCustomerId(Customer customer) {this.customer = customer;}
-    public void setTotalAmount(double totalAmount) {this.totalAmount = totalAmount;}
+    public void setTotalAmount(double totalAmount) {this.totalAmount = cart.cartValue();}
 }
