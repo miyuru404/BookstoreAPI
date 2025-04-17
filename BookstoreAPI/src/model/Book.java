@@ -3,14 +3,14 @@ package model;
 public class Book {
     private String title;
     private String author;
-    private int ISBN;
-    private String publicationYear;
+    private String ISBN;
+    private int publicationYear;
     private double price;
     private int stockQuantity;
 
     public Book() {}
 
-    public Book(String title, String author, int ISBN, String publicationYear, int price, int stockQuantity) {
+    public Book(String title, String author, String ISBN, int publicationYear, double price, int stockQuantity) {
         this.title = title;
         this.author = author;
         this.ISBN = ISBN;
@@ -20,15 +20,15 @@ public class Book {
     }
     public String getTitle() {return title;}
     public String getAuthor() {return author;}
-    public int getISBN() {return ISBN;}
-    public String getPublicationYear() {return publicationYear;}
+    public String getISBN() {return ISBN;}
+    public int getPublicationYear() {return publicationYear;}
     public double getPrice() {return price;}
     public int getStockQuantity() {return stockQuantity;}
 
     public void setTitle(String title) {this.title = title;}
     public void setAuthor(String author) {this.author = author;}
-    public void setISBN(int ISBN) {this.ISBN = ISBN;}
-    public void setPublicationYear(String publicationYear) {this.publicationYear = publicationYear;}
+    public void setISBN(String ISBN) {this.ISBN = ISBN;}
+    public void setPublicationYear(int publicationYear) {this.publicationYear = publicationYear;}
     public void setPrice(int price) {this.price = price;}
     public void setStockQuantity(int stockQuantity) {this.stockQuantity = stockQuantity;}
 
