@@ -8,14 +8,34 @@ import java.util.List;
 public class BookDataStore {
     private static final List<Book> books = new ArrayList<Book>();
 
-    public static void addBook(Book book) {
-        books.add(book);
+    public static void addBook(String newTitle, String newAuthor, String newISBN, Integer newPublicationYear, Double newPrice, Integer newStockQuantity) {
+            if(newTitle != null
+                    && newAuthor != null
+                    && newISBN != null
+                    && newPrice != null
+                    && newPublicationYear != null
+                    && newStockQuantity != null)
+            {Book newBook = new Book( newTitle, newAuthor,  newISBN,  newPublicationYear,  newPrice, newStockQuantity);
+             books.add(newBook);
+        }
+
     }
 
-    public static void deleteBook(Book book) {
-        books.remove(book);
-    }
+    public static void deleteBook(String ISBN) {
+        if(ISBN != null) {
+            for (Book book : books) {
+                if (book.getISBN().equals(ISBN)) {
+                    books.remove(book);
+                }
+            }
+            System.out.println("Book with ISBN " + ISBN + " deleted.");
+        }
+        else{
+            System.out.println("Book not found");
+        }
 
+    }
+    // update the books detail if there are not null or empty
     public static void updateBook(String ISBN, String newTitle, String newAuthor, String newISBN, Integer newPublicationYear, Double newPrice, Integer newStockQuantity) {
         if (books.isEmpty()) {
             System.out.println("No books available currently.");
@@ -24,36 +44,23 @@ public class BookDataStore {
 
         for (Book book : books) {
             if (book.getISBN().equals(ISBN)) {
-
-                if (newISBN != null && !newISBN.isEmpty()) {
+                if (newISBN != null && !newISBN.isEmpty()
+                        && newTitle != null && !newTitle.isEmpty()
+                        && newAuthor != null && !newAuthor.isEmpty()
+                        && newPublicationYear != null && newPublicationYear > 0
+                        && newPrice != null && newPrice > 0
+                        && newStockQuantity != null && newStockQuantity >= 0) {
                     book.setISBN(newISBN);
-                }
-
-                if (newTitle != null && !newTitle.isEmpty()) {
                     book.setTitle(newTitle);
-                }
-
-                if (newAuthor != null && !newAuthor.isEmpty()) {
                     book.setAuthor(newAuthor);
-                }
-
-                if (newPublicationYear != null && newPublicationYear > 0) {
                     book.setPublicationYear(newPublicationYear);
-                }
-
-                if (newPrice != null && newPrice > 0) {
                     book.setPrice(newPrice);
-                }
-
-                if (newStockQuantity != null && newStockQuantity >= 0) {
                     book.setStockQuantity(newStockQuantity);
                 }
-
                 System.out.println("Book updated successfully.");
                 return;
             }
         }
-
         System.out.println("Book with given ISBN not found.");
     }
 
