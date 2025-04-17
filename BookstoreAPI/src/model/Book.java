@@ -29,7 +29,7 @@ public class Book {
     public void setAuthor(String author) {this.author = author;}
     public void setISBN(String ISBN) {this.ISBN = ISBN;}
     public void setPublicationYear(int publicationYear) {this.publicationYear = publicationYear;}
-    public void setPrice(int price) {this.price = price;}
+    public void setPrice(double price) {this.price = price;}
     public void setStockQuantity(int stockQuantity) {this.stockQuantity = stockQuantity;}
 
 
