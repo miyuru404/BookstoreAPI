@@ -15,8 +15,14 @@ public class BookDataStore {
                     && newPrice != null
                     && newPublicationYear != null
                     && newStockQuantity != null)
-            {Book newBook = new Book( newTitle, newAuthor,  newISBN,  newPublicationYear,  newPrice, newStockQuantity);
-             books.add(newBook);
+            {
+                if(!books.contains(new Book(newTitle, newAuthor, newISBN, newPublicationYear, newPrice, newStockQuantity))) {
+
+                    System.out.println("Book is added to the list");
+                }
+                else {
+                    System.out.println("book already exists");
+                }
         }
 
     }
