@@ -28,47 +28,64 @@ public class BookDataStore {
     }
 
     public static void deleteBook(String ISBN) {
-        if(ISBN != null) {
-            for (Book book : books) {
-                if (book.getISBN().equals(ISBN)) {
-                    books.remove(book);
-                }
-            }
-            System.out.println("Book with ISBN " + ISBN + " deleted.");
-        }
-        else{
-            System.out.println("Book not found");
-        }
-
-    }
-    // update the books detail if there are not null or empty
-    public static void updateBook(String ISBN, String newTitle, String newAuthor, String newISBN, Integer newPublicationYear, Double newPrice, Integer newStockQuantity) {
+        boolean found = false;
         if (books.isEmpty()) {
             System.out.println("No books available currently.");
             return;
         }
-
-        for (Book book : books) {
-            if (book.getISBN().equals(ISBN)) {
-                if (newISBN != null && !newISBN.isEmpty()
-                        && newTitle != null && !newTitle.isEmpty()
-                        && newAuthor != null && !newAuthor.isEmpty()
-                        && newPublicationYear != null && newPublicationYear > 0
-                        && newPrice != null && newPrice > 0
-                        && newStockQuantity != null && newStockQuantity >= 0) {
-                    book.setISBN(newISBN);
-                    book.setTitle(newTitle);
-                    book.setAuthor(newAuthor);
-                    book.setPublicationYear(newPublicationYear);
-                    book.setPrice(newPrice);
-                    book.setStockQuantity(newStockQuantity);
+        else {
+            if(ISBN != null) {
+                for (Book book : books) {
+                    if (book.getISBN().equals(ISBN)) {
+                        books.remove(book);
+                        System.out.println("Book with ISBN " + ISBN + " deleted.");
+                        found = true;
+                    }
                 }
-                System.out.println("Book updated successfully.");
-                return;
+                if(found ) {System.out.println("Book with ISBN " + ISBN + " not found");}
+            }
+
+            else{
+                System.out.println("please add all required details about book");
             }
         }
-        System.out.println("Book with given ISBN not found.");
+
+
     }
+    // update the books detail if there are not null or empty
+    public static void updateBook(String ISBN, String newTitle, String newAuthor, String newISBN, Integer newPublicationYear, Double newPrice, Integer newStockQuantity) {
+        boolean found = false;
+
+        if (books.isEmpty()) {
+            System.out.println("No books available currently.");
+
+        }
+        else{
+            for (Book book : books) {
+                if (book.getISBN().equals(ISBN)) {
+                    if (newISBN != null && !newISBN.isEmpty()
+                            && newTitle != null && !newTitle.isEmpty()
+                            && newAuthor != null && !newAuthor.isEmpty()
+                            && newPublicationYear != null && newPublicationYear > 0
+                            && newPrice != null && newPrice > 0
+                            && newStockQuantity != null && newStockQuantity >= 0) {
+                        book.setISBN(newISBN);
+                        book.setTitle(newTitle);
+                        book.setAuthor(newAuthor);
+                        book.setPublicationYear(newPublicationYear);
+                        book.setPrice(newPrice);
+                        book.setStockQuantity(newStockQuantity);
+                    }
+                    System.out.println("Book updated successfully.");
+                    found = true;
+
+                }
+            }
+            if(found ) {System.out.println("Book with ISBN " + ISBN + " not found");}
+        }
+    }
+
+
 
 
     // method overloading if user have given other books details other than ISBN
@@ -77,10 +94,12 @@ public class BookDataStore {
             System.out.println("No books available currently.");
             return null;
         }
+
         for (Book book : books) {
-            if (book.getTitle().equals(title)
-                    && book.getAuthor().equals(author)
-                    && book.getPublicationYear() == year) {
+            if (book.getTitle().equals(title) &&
+                    book.getAuthor().equals(author) &&
+                    book.getPublicationYear() == year) {
+
                 if (book.getStockQuantity() > 0) {
                     return book;
                 } else {
@@ -89,9 +108,10 @@ public class BookDataStore {
                 }
             }
         }
-        System.out.println("The book was not found.");
+        System.out.println("Book with title '" + title + "' by " + author + " not found.");
         return null;
     }
+
 
     // method overloading if user have given only the ISBN
     public static Book getBook(String ISBN) {
@@ -99,8 +119,9 @@ public class BookDataStore {
             System.out.println("No books available currently.");
             return null;
         }
+
         for (Book book : books) {
-            if (book.getISBN() == ISBN) {
+            if (book.getISBN().equals(ISBN)) {
                 if (book.getStockQuantity() > 0) {
                     return book;
                 } else {
@@ -109,7 +130,9 @@ public class BookDataStore {
                 }
             }
         }
-        System.out.println("The book was not found.");
+
+        System.out.println("The book with ISBN '" + ISBN + "' was not found.");
         return null;
     }
+
 }
