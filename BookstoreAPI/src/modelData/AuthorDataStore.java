@@ -30,6 +30,9 @@ public class AuthorDataStore {
             authors.remove(author);
             System.out.println("Author deleted");
         }
+        else {
+            System.out.println("author not found");
+        }
     }
 
 
@@ -57,7 +60,7 @@ public class AuthorDataStore {
         }
         if (authors.isEmpty()) {
             System.out.println("no authors been added yet");
-            return null; // ← adding this return
+            return null;
         }
         for (Author author : authors) {
             if (author.getName().equals(name) && author.getSurname().equals(surname)) {

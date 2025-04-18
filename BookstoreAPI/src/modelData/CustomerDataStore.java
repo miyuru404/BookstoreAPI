@@ -51,6 +51,9 @@ public class CustomerDataStore {
             customers.remove(customer);
             System.out.println("customer deleted");
         }
+        else {
+            System.out.println("customer not found");
+        }
     }
     public static void updateCustomer(String name,String email,String newName,String newEmail,int newPsword) {
         int length = String.valueOf(newPsword).length();
