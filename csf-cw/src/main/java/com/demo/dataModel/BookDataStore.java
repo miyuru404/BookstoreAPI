@@ -63,18 +63,18 @@ public class BookDataStore {
         }
     }
 
-    public static void updateBook(String title,String author, String ISBN,String newTitle, String newAuthor, String newISBN, int newPublicationYear, double newPrize, int newStockQuantity) {
+    public static void updateBook(String title,String author, String ISBN, Book newBook) {
         Book book = getBook(title,author,ISBN);
         if(book == null){
             System.out.println("no book found");
         }
         else {
-            book.setTitle(newTitle);
-            book.setAuthor(newAuthor);
-            book.setISBN(newISBN);
-            book.setPublicationYear(newPublicationYear);
-            book.setPrice(newPrize);
-            book.setStockQuantity(newStockQuantity);
+            book.setTitle(newBook.getTitle());
+            book.setAuthor(newBook.getAuthor());
+            book.setISBN(newBook.getISBN());
+            book.setPublicationYear(newBook.getPublicationYear());
+            book.setPrice(newBook.getPrice());
+            book.setStockQuantity(newBook.getStockQuantity());
             System.out.println("book updated");
         }
     }

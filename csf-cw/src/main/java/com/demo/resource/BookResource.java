@@ -9,6 +9,8 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.List;
 
+//import static com.demo.dataModel.BookDataStore.books;
+
 @Path("/books")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -16,7 +18,7 @@ public class BookResource {
 
 
 
-    // ✅ Get book by ISBN
+    //  Get book by ISBN
     @GET
     @Path("/{isbn}")
     public Response getBookByISBN(@PathParam("isbn") String isbn) {
@@ -44,26 +46,23 @@ public class BookResource {
 
 
 
-    // ✅ Update a book
+    //  Update a book
     @PUT
     @Path("/{isbn}")
     public Response updateBook(@PathParam("isbn") String isbn, Book updatedBook) {
-        Book original = BookDataStore.getBook(isbn);
-        if (original == null) {
+
+        Book book = BookDataStore.getBook(isbn);
+        if (book == null) {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("{\"error\":\"Book not found\"}").build();
         }
 
-        BookDataStore.updateBook(
-                original.getTitle(), original.getAuthor(), original.getISBN(),
-                updatedBook.getTitle(), updatedBook.getAuthor(), updatedBook.getISBN(),
-                updatedBook.getPublicationYear(), updatedBook.getPrice(), updatedBook.getStockQuantity()
-        );
+        BookDataStore.updateBook(book.getTitle(), book.getAuthor(), book.getISBN(),updatedBook);
 
         return Response.ok("{\"message\":\"Book updated successfully\"}").build();
     }
 
-    // ✅ Delete a book
+    //  Delete a book
     @DELETE
     @Path("/{isbn}")
     public Response deleteBook(@PathParam("isbn") String isbn) {
