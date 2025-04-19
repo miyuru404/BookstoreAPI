@@ -10,6 +10,10 @@ import java.util.List;
 public class BookDataStore {
     private static final List<Book> books = new ArrayList<Book>();
 
+    public static List<Book> getAllBooks() {
+        return books;
+    }
+
     public static Book getBook(String ISBN) {
         if(books.isEmpty()){
             System.out.println("no books been added yet");
@@ -39,14 +43,7 @@ public class BookDataStore {
     }
 
     public static void addBook(Book book) {
-        if (getBook(book.getTitle(), book.getAuthor(), book.getISBN()) != null) {
-            System.out.println("Book already exists");
-            return;
-        }
-        if (book.getStockQuantity() < 1) {
-            System.out.println("At least 1 stock required");
-            return;
-        }
+
 
         books.add(book);
     }

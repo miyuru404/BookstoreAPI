@@ -22,27 +22,75 @@ public class BookResource {
     @GET
     @Path("/{isbn}")
     public Response getBookByISBN(@PathParam("isbn") String isbn) {
+        if (BookDataStore.getAllBooks().isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("{\"error\":\"No books have been added to the database\"}").build();
+        }
+
         Book book = BookDataStore.getBook(isbn);
         if (book == null) {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("{\"error\":\"Book not found\"}").build();
         }
+
         return Response.ok(book).build();
     }
 
+    // add book
     @POST
-    @Path("/addBook")  // Correct endpoint for adding a book
+    @Path("/addBook")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response addBook(Book book) {
-        if (book == null || book.getISBN() == null || book.getTitle() == null) {
+        if (book == null) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"Invalid book details\"}").build();
+                    .entity("{\"error\":\"Book data is missing or malformed.\"}").build();
         }
 
-        BookDataStore.addBook(book);
+        // Validate required fields
+        if (book.getISBN() == null || book.getISBN().trim().isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("{\"error\":\"ISBN is required.\"}").build();
+        }
 
+        if (book.getTitle() == null || book.getTitle().trim().isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("{\"error\":\"Title is required.\"}").build();
+        }
+
+        if (book.getAuthor() == null || book.getAuthor().trim().isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("{\"error\":\"Author is required.\"}").build();
+        }
+
+        if (book.getPublicationYear() <= 0) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("{\"error\":\"Publication year must be a valid year.\"}").build();
+        }
+
+        if (book.getPrice() <= 0) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("{\"error\":\"Price must be valid prize.\"}").build();
+        }
+
+        if (book.getStockQuantity() <= 0) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("{\"error\":\"At least 1 book needs to be added to stock.\"}").build();
+        }
+
+
+        // Check for duplicates by ISBN
+        if (BookDataStore.getBook(book.getISBN()) != null) {
+            return Response.status(Response.Status.CONFLICT)
+                    .entity("{\"error\":\"A book with this ISBN already exists.\"}").build();
+        }
+
+        // Add the book
+        BookDataStore.addBook(book);
         return Response.status(Response.Status.CREATED)
-                .entity("{\"message\":\"Book added successfully\"}").build();
+                .entity("{\"message\":\"Book added successfully.\"}").build();
     }
+
 
 
 
@@ -51,7 +99,44 @@ public class BookResource {
     @Path("/{isbn}")
     public Response updateBook(@PathParam("isbn") String isbn, Book updatedBook) {
 
+        if (updatedBook == null) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("{\"error\":\"Book data is missing or malformed.\"}").build();
+        }
+
+        // Validate required fields
+        if (updatedBook.getISBN() == null || updatedBook.getISBN().trim().isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("{\"error\":\"ISBN is required.\"}").build();
+        }
+
+        if (updatedBook.getTitle() == null || updatedBook.getTitle().trim().isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("{\"error\":\"Title is required.\"}").build();
+        }
+
+        if (updatedBook.getAuthor() == null || updatedBook.getAuthor().trim().isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("{\"error\":\"Author is required.\"}").build();
+        }
+
+        if (updatedBook.getPublicationYear() <= 0) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("{\"error\":\"Publication year must be a valid year.\"}").build();
+        }
+
+        if (updatedBook.getPrice() <= 0) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("{\"error\":\"Price must be valid prize.\"}").build();
+        }
+
+        if (updatedBook.getStockQuantity() <= 0) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("{\"error\":\"At least 1 book needs to be added to stock.\"}").build();
+        }
+
         Book book = BookDataStore.getBook(isbn);
+
         if (book == null) {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("{\"error\":\"Book not found\"}").build();
