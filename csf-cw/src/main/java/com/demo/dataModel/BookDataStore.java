@@ -38,19 +38,19 @@ public class BookDataStore {
         return null;
     }
 
-    public static void addBook(String title , String author,String ISBN,int publicationYear,double prize , int stockQuantity) {
-        if(getBook(title, author, ISBN) != null){
-            System.out.println("book already exists");
+    public static void addBook(Book book) {
+        if (getBook(book.getTitle(), book.getAuthor(), book.getISBN()) != null) {
+            System.out.println("Book already exists");
             return;
         }
-        if(stockQuantity < 1){
-            System.out.println("at least 1 stock required");
+        if (book.getStockQuantity() < 1) {
+            System.out.println("At least 1 stock required");
             return;
         }
-        Book newBook = new Book(title,author,ISBN,publicationYear,prize,stockQuantity);
-        books.add(newBook);
 
+        books.add(book);
     }
+
 
     public static void removeBook(String title, String author, String ISBN) {
         Book book = getBook(title,author,ISBN);
