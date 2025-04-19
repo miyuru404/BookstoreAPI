@@ -9,8 +9,8 @@ import org.glassfish.jersey.server.ResourceConfig;
 import java.net.URI;
 
 public class Main {
-    public static final String BASE_URI = "http://localhost:8080/api/";
 
+    public static final String BASE_URI = "http://localhost:8080/api/";
     public static HttpServer startServer() {
 
         final ResourceConfig rc = new ResourceConfig().packages("com.demo.resource");
