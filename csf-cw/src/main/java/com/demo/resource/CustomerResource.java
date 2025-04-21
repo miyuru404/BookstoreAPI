@@ -180,7 +180,7 @@ public class CustomerResource {
                 .build();
     }
     @DELETE
-    @Path("/remove")
+    @Path("/delete")
     @Produces(MediaType.APPLICATION_JSON)
     public Response removeCustomer(@QueryParam("name") String name, @QueryParam("email") String email) {
         if (name == null || name.trim().isEmpty() || email == null || email.trim().isEmpty()) {
