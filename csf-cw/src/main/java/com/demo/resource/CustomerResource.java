@@ -182,8 +182,7 @@ public class CustomerResource {
     @DELETE
     @Path("/remove")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response removeCustomer(@QueryParam("name") String name,
-                                   @QueryParam("email") String email) {
+    public Response removeCustomer(@QueryParam("name") String name, @QueryParam("email") String email) {
         if (name == null || name.trim().isEmpty() || email == null || email.trim().isEmpty()) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("Name and email are required.")
