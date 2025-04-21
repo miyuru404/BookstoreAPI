@@ -122,14 +122,11 @@ public class CustomerResource {
                 .entity("Customer successfully added.")
                 .build();
     }
-
     @PUT
-    @Path("/update")
+    @Path("/update/{name}/{email}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateCustomer(@QueryParam("name") String name,
-                                   @QueryParam("email") String email,
-                                   Customer updatedCustomer) {
+    public Response updateCustomer(@PathParam("name") String name, @PathParam("email") String email, Customer updatedCustomer) {
         if (updatedCustomer == null) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("Updated customer object is missing.")
@@ -170,7 +167,7 @@ public class CustomerResource {
         Customer existing = CustomerDataStore.getCustomer(name, email);
         if (existing == null) {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity("Original customer not found.")
+                    .entity("customer not found.")
                     .build();
         }
 
@@ -180,27 +177,29 @@ public class CustomerResource {
                 .build();
     }
     @DELETE
-    @Path("/delete")
+    @Path("/delete/{name}/{email}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response removeCustomer(@QueryParam("name") String name, @QueryParam("email") String email) {
+    public Response removeCustomer(@PathParam("name") String name, @PathParam("email") String email) {
         if (name == null || name.trim().isEmpty() || email == null || email.trim().isEmpty()) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("Name and email are required.")
+                    .entity("{\"error\":\"Name and email are required.\"}")
                     .build();
         }
 
         Customer customer = CustomerDataStore.getCustomer(name, email);
         if (customer == null) {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity("Customer not found.")
+                    .entity("{\"error\":\"Customer not found.\"}")
                     .build();
         }
 
         CustomerDataStore.removeCustomer(name, email);
         return Response.status(Response.Status.OK)
-                .entity("Customer removed successfully.")
+                .entity("{\"message\":\"Customer removed successfully.\"}")
                 .build();
     }
+
+
 
 
 

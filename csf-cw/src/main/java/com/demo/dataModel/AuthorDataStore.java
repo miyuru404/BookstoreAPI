@@ -38,18 +38,21 @@ public class AuthorDataStore {
     }
 
 
-    public static void updateAuthor(String name,String surname ,String newName,String newSurname,int age) {
-        if(newName == null || newName.isEmpty() || newSurname == null || newSurname.isEmpty()){
+    public static void updateAuthor(String name,String surname ,Author  newAuthor) {
+        if(newAuthor.getName() == null || newAuthor.getName().isEmpty() || newAuthor.getSurname() == null || newAuthor.getSurname().isEmpty()){
             System.out.println("provide valide details");
             return ;
         }
 
         Author author = getAuthor(name, surname);
         if(author != null){
-            author.setName(newName);
-            author.setSurname(newSurname);
-            author.setAge(age);
+            author.setName(newAuthor.getName());
+            author.setSurname(newAuthor.getSurname());
+            author.setAge(newAuthor.getAge());
             System.out.println("Author updated");
+        }
+        else {
+            System.out.println("author not found");
         }
 
     }
