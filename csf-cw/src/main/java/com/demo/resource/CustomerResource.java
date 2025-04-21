@@ -70,7 +70,7 @@ public class CustomerResource {
 
         if (customer == null) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("Customer object is missing.")
+                    .entity("Customer details is missing.")
                     .build();
         }
 

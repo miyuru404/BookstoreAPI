@@ -10,18 +10,18 @@ import java.util.List;
 public class AuthorDataStore {
     private static final List<Author> authors = new ArrayList<Author>();
 
-    public static void addAuthor(String name,String surname,int age) {
-        if(name == null || name.isEmpty() || surname == null || surname.isEmpty()){
+    public static void addAuthor(Author author) {
+        if(author.getName() == null || author.getName().isEmpty() || author.getSurname() == null || author.getSurname().isEmpty()){
             System.out.println("provide valide details");
             return ;
         }
 
-        if(getAuthor( name, surname) != null){
+        if(getAuthor( author.getName(), author.getSurname()) != null){
             System.out.println("author already exists");
             return;
         }
 
-        Author author = new Author(name,surname,age);
+
         authors.add(author);
 
     }
