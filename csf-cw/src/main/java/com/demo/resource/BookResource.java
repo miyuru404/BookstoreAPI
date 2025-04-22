@@ -20,7 +20,7 @@ public class BookResource {
 
     //  Get book by ISBN
     @GET
-    @Path("/{isbn}")
+    @Path("/getBook/{isbn}")
     public Response getBookByISBN(@PathParam("isbn") String isbn) {
         if (BookDataStore.getAllBooks().isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND)
@@ -96,7 +96,7 @@ public class BookResource {
 
     //  Update a book
     @PUT
-    @Path("/{isbn}")
+    @Path("/updateBook/{isbn}")
     public Response updateBook(@PathParam("isbn") String isbn, Book updatedBook) {
 
         if (updatedBook == null) {
@@ -149,7 +149,7 @@ public class BookResource {
 
     //  Delete a book
     @DELETE
-    @Path("/{isbn}")
+    @Path("/deleteBook/{isbn}")
     public Response deleteBook(@PathParam("isbn") String isbn) {
         Book book = BookDataStore.getBook(isbn);
         if (book == null) {
