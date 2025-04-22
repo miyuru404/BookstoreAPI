@@ -18,6 +18,8 @@ public class CartResource {
 
     @POST
     @Path("/addCart/{name}/{email}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response addCart(@PathParam("name") String name, @PathParam("email") String email) {
         if (name == null || name.isEmpty()) {
             return Response.status(Response.Status.BAD_REQUEST)
@@ -72,6 +74,8 @@ public class CartResource {
 
     @POST
     @Path("/addBook/{email}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response addBookToCart(@PathParam("email") String email, BookInput input) {
         Customer customer = CustomerDataStore.getCustomerByEmail(email);
 
