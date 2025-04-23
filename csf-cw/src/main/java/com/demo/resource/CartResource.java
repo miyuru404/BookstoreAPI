@@ -46,6 +46,10 @@ public class CartResource {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("{\"error\":\"Customer not found!\"}").build();
         }
+        Cart exsistingCart = CartDataStore.getCartByCustomer(customer);
+        if (exsistingCart != null) {
+            return Response.status(Response.Status.FOUND).entity("{\"error\":\"this customer already have a cart!\"}").build();
+        }
 
         Cart newCart = new Cart(customer);
         CartDataStore.addCart(newCart);
