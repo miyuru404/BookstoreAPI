@@ -20,17 +20,21 @@ public class CartDataStore {
         carts.add(cart);
     }
 
-    public static Cart getCartByCustomer(Customer customer) {
+    public static Cart getCart(String email) {
         for (Cart cart : carts) {
-            if (cart.getCustomer().equals(customer)) {
+            if (cart.getCustomerEmail().equals(email)) {
                 return cart;
             }
         }
         return null;
     }
 
-    public static void removeCartByCustomer(Customer customer) {
-        carts.removeIf(cart -> cart.getCustomer().equals(customer));
+    public static void removeCart(String email) {
+        for (Cart cart : carts) {
+            if (cart.getCustomerEmail().equals(email)) {
+                carts.remove(cart);
+            }
+        }
     }
 
     public static List<Cart> getAllCarts() {

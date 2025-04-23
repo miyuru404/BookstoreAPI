@@ -4,24 +4,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Cart {
-    private Customer customer ;
+    private String email ;
     private List<Book> items;
     private double cartValue;
 
-    public Cart(Customer customer) {
-        this.customer = customer;
+    public Cart(String email) {
+        this.email=email;
         this.items = new ArrayList<>();
     }
-    public Customer getCustomer() {return customer;}
+    public String getCustomerEmail() {return email;}
 
     public List<Book> getItems() {return items;}
 
     public double getValueOfTheCart() { return cartValue(); }
 
-    public void setCustomer(Customer customer) { this.customer = customer; }
 
     public void addItem(Book book) {
         items.add(book);
+    }
+    public void removeItem(Book book) {
+        items.remove(book);
     }
 
     public double cartValue() {

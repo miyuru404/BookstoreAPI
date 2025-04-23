@@ -16,46 +16,7 @@ import java.util.List;
 @Consumes(MediaType.APPLICATION_JSON)
 public class CartResource {
 
-    @POST
-    @Path("/addCart/{name}/{email}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response addCart(@PathParam("name") String name, @PathParam("email") String email) {
-        if (name == null || name.isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"Customer name is missing\"}").build();
-        }
 
-        if (!name.matches("^[A-Za-z ]+$")) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"Invalid name. Name should contain only letters and spaces.\"}").build();
-        }
-
-        if (email == null || email.trim().isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"Email is required.\"}").build();
-        }
-
-        if (!email.matches("^[\\w.-]+@[\\w.-]+\\.\\w{2,}$")) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"Email format is invalid.\"}").build();
-        }
-
-        Customer customer = CustomerDataStore.getCustomer(name, email);
-        if (customer == null) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"error\":\"Customer not found!\"}").build();
-        }
-        Cart exsistingCart = CartDataStore.getCartByCustomer(customer);
-        if (exsistingCart != null) {
-            return Response.status(Response.Status.FOUND).entity("{\"error\":\"this customer already have a cart!\"}").build();
-        }
-
-        Cart newCart = new Cart(customer);
-        CartDataStore.addCart(newCart);
-        return Response.status(Response.Status.CREATED)
-                .entity("{\"message\":\"New cart added!\"}").build();
-    }
 
     @GET
     @Path("/getcart/{email}")
@@ -67,7 +28,7 @@ public class CartResource {
                     .entity("{\"error\":\"Customer not found!\"}").build();
         }
 
-        Cart cart = CartDataStore.getCartByCustomer(customer);
+        Cart cart = CartDataStore.getCart(email);
         if (cart == null) {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("{\"error\":\"Cart not found!\"}").build();
@@ -109,11 +70,7 @@ public class CartResource {
                     .entity("{\"error\":\"Book not found in database.\"}").build();
         }
 
-        Cart cart = CartDataStore.getCartByCustomer(customer);
-        if (cart == null) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"error\":\"Cart not found!\"}").build();
-        }
+        Cart cart = CartDataStore.getCart(email);
 
         cart.addItem(book);
         return Response.status(Response.Status.OK)
@@ -126,6 +83,50 @@ public class CartResource {
         List<Cart> carts = CartDataStore.getAllCarts();
         return Response.status(Response.Status.OK).entity(carts).build();
     }
+
+    @DELETE
+    @Path("/removeBook/{email}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response removeCustomer(@PathParam("email") String email , BookInput input) {
+        Customer customer = CustomerDataStore.getCustomerByEmail(email);
+
+        if (customer == null) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("{\"error\":\"Customer not found!\"}").build();
+        }
+
+        if (input.ISBN == null || input.ISBN.trim().isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("{\"error\":\"ISBN is required.\"}").build();
+        }
+
+        if (input.title == null || input.title.trim().isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("{\"error\":\"Title is required.\"}").build();
+        }
+
+        if (input.author == null || input.author.trim().isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("{\"error\":\"Author is required.\"}").build();
+        }
+
+        Book book = BookDataStore.getBook(input.title, input.author, input.ISBN);
+        if (book == null) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("{\"error\":\"Book not found in database.\"}").build();
+        }
+
+        Cart cart = CartDataStore.getCart(email);
+
+        if (cart == null) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("{\"error\":\"No books found in the cart.\"}").build();
+        }
+        cart.removeItem(book);
+        return Response.status(Response.Status.OK)
+                .entity("{\"error\":\"Book is remove from the cart.\"}").build();
+    }
+
 }
  class BookInput {
     public String title;
@@ -133,6 +134,3 @@ public class CartResource {
     public String ISBN;
 }
 
-// need to done
-//  remove book from cart
-//  remove cart
