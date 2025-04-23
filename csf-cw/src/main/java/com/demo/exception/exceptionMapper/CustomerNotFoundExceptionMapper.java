@@ -16,7 +16,4 @@ public class CustomerNotFoundExceptionMapper implements ExceptionMapper<Customer
 
 
 
-//AuthorNotFoundExceptionMapper	404 Not Found
-//InvalidInputExceptionMapper	400 Bad Request
-//OutOfStockExceptionMapper 	409 Conflict
-//CartNotFoundExceptionMapper 	404 Not Found
+
