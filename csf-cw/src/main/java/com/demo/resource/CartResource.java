@@ -84,8 +84,9 @@ public class CartResource {
         return Response.status(Response.Status.OK).entity(carts).build();
     }
 
-    @DELETE
+    @POST
     @Path("/removeBook/{email}")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response removeBook(@PathParam("email") String email , BookInput input) {
         Customer customer = CustomerDataStore.getCustomerByEmail(email);

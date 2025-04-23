@@ -102,13 +102,13 @@ public class AuthorResource {
         Author author = AuthorDataStore.getAuthor(name, surname);
         if (author == null) {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"error\":\"Customer not found.\"}")
+                    .entity("{\"error\":\"Author not found.\"}")
                     .build();
         }
 
         AuthorDataStore.deleteAuthor(name, surname);
         return Response.status(Response.Status.OK)
-                .entity("{\"error\":\"Customer removed successfully.\"}")
+                .entity("{\"error\":\"Author removed successfully.\"}")
                 .build();
     }
 
@@ -119,7 +119,7 @@ public class AuthorResource {
     public Response updateCustomer(@PathParam("name") String name, @PathParam("surname") String surname, Author updatedAuthor) {
         if (updatedAuthor == null) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"Updated customer object is missing.\"}")
+                    .entity("{\"error\":\"Updated Author object is missing.\"}")
                     .build();
         }
 
