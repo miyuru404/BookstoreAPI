@@ -5,12 +5,14 @@ import java.util.List;
 
 public class Cart {
     private String email ;
-    private List<Book> items;
+    private List<Book> items  ;
     private double cartValue;
 
     public Cart(String email) {
         this.email=email;
-        this.items = new ArrayList<>();
+        this.items = items = new ArrayList<>() ;
+
+
     }
     public String getCustomerEmail() {return email;}
 

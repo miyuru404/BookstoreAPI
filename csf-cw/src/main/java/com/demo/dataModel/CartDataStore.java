@@ -10,10 +10,10 @@ import java.util.List;
 
 public class CartDataStore {
 
-    private static List<Cart> carts;
+    private static final List<Cart> carts = new ArrayList<>();
 
     public  CartDataStore() {
-        carts = new ArrayList<>();
+
     }
 
     public static void addCart(Cart cart) {

@@ -11,14 +11,16 @@ public class Customer {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.cart = new Cart(email);
+        //this.cart = new Cart(email);
     }
     public String getName() {return name;}
     public String getEmail() {return email;}
     public String getPassword() {return password;}
+    public Cart getCart() {return cart;}
 
     public void setName(String name) {this.name = name;}
     public void setEmail(String email) {this.email = email;}
     public void setPassword(String password) {this.password = password;}
+    public void setCart(Cart cart) {this.cart = cart;}
 
 }

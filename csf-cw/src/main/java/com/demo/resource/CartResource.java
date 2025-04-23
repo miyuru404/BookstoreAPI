@@ -87,7 +87,7 @@ public class CartResource {
     @DELETE
     @Path("/removeBook/{email}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response removeCustomer(@PathParam("email") String email , BookInput input) {
+    public Response removeBook(@PathParam("email") String email , BookInput input) {
         Customer customer = CustomerDataStore.getCustomerByEmail(email);
 
         if (customer == null) {

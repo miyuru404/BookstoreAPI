@@ -2,6 +2,7 @@ package com.demo.dataModel;
 
 
 
+import com.demo.model.Cart;
 import com.demo.model.Customer;
 
 import java.util.ArrayList;
@@ -87,6 +88,9 @@ public class CustomerDataStore {
             return ;
         }
         customers.add(customer);
+        Cart cart = new Cart(customer.getEmail());
+        customer.setCart(cart);
+        CartDataStore.addCart(cart);
         System.out.println("customer added");
     }
     public static void removeCustomer(String name ,String email) {

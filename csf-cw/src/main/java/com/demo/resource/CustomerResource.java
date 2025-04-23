@@ -1,5 +1,6 @@
 package com.demo.resource;
 
+import com.demo.dataModel.CartDataStore;
 import com.demo.dataModel.CustomerDataStore;
 import com.demo.model.Customer;
 import jakarta.ws.rs.*;
@@ -113,6 +114,7 @@ public class CustomerResource {
         }
 
         CustomerDataStore.addCustomer(customer);
+
 
         return Response.status(Response.Status.CREATED)
                 .entity("{\"message\":\"Customer successfully added.\"}")
