@@ -17,7 +17,6 @@ import java.util.List;
 public class CartResource {
 
 
-
     @GET
     @Path("/getcart/{email}")
     public Response getCartByCustomer(@PathParam("email") String email) {
@@ -88,7 +87,7 @@ public class CartResource {
     @Path("/removeBook/{email}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response removeBook(@PathParam("email") String email , BookInput input) {
+    public Response removeBook(@PathParam("email") String email, BookInput input) {
         Customer customer = CustomerDataStore.getCustomerByEmail(email);
 
         if (customer == null) {
@@ -129,10 +128,11 @@ public class CartResource {
         return Response.status(Response.Status.OK)
                 .entity("{\"message\":\"Book has been removed from the cart.\"}").build();
 
-
-
     }
- class BookInput {
+
+}
+
+class BookInput {
     public String title;
     public String author;
     public String ISBN;
