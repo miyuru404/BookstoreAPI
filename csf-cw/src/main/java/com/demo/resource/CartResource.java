@@ -119,16 +119,19 @@ public class CartResource {
 
         Cart cart = CartDataStore.getCart(email);
 
-        if (cart == null) {
+        if (cart == null || cart.getItems() == null || cart.getItems().isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("{\"error\":\"No books found in the cart.\"}").build();
         }
-        cart.removeItem(book);
-        return Response.status(Response.Status.OK)
-                .entity("{\"error\":\"Book is remove from the cart.\"}").build();
-    }
 
-}
+        cart.removeItem(book);
+
+        return Response.status(Response.Status.OK)
+                .entity("{\"message\":\"Book has been removed from the cart.\"}").build();
+
+
+
+    }
  class BookInput {
     public String title;
     public String author;
