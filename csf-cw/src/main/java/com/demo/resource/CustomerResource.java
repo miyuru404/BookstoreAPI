@@ -1,7 +1,8 @@
 package com.demo.resource;
 
-import com.demo.dataModel.CartDataStore;
 import com.demo.dataModel.CustomerDataStore;
+import com.demo.exception.CustomerNotFoundException;
+import com.demo.exception.InvalidInputException;
 import com.demo.model.Customer;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -17,23 +18,17 @@ public class CustomerResource {
     public Response getCustomerByName(@PathParam("name") String name) {
 
         if (name == null || name.isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"Customer name is missing\"}")
-                    .build();
+            throw new InvalidInputException("Customer name is missing.");
         }
 
         if (!name.matches("^[A-Za-z ]+$")) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"Invalid name. Name should contain only letters and spaces.\"}")
-                    .build();
+            throw new InvalidInputException("Invalid name. Name should contain only letters and spaces.");
         }
 
         Customer customer = CustomerDataStore.getCustomerByName(name);
 
         if (customer == null) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"error\":\"Customer not found\"}")
-                    .build();
+            throw new CustomerNotFoundException("Customer not found with the given name.");
         }
 
         return Response.ok(customer).build();
@@ -44,23 +39,17 @@ public class CustomerResource {
     public Response getCustomerByEmail(@PathParam("email") String email) {
 
         if (email == null || email.isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"Customer details is missing\"}")
-                    .build();
+            throw new InvalidInputException("Customer email is missing.");
         }
 
         if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"Invalid email format.\"}")
-                    .build();
+            throw new InvalidInputException("Invalid email format.");
         }
 
         Customer customer = CustomerDataStore.getCustomerByEmail(email);
 
         if (customer == null) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"error\":\"Customer not found\"}")
-                    .build();
+            throw new CustomerNotFoundException("Customer not found with the given email.");
         }
 
         return Response.ok(customer).build();
@@ -71,40 +60,28 @@ public class CustomerResource {
     public Response addCustomer(Customer customer) {
 
         if (customer == null) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"Customer details is missing.\"}")
-                    .build();
+            throw new InvalidInputException("Customer details are missing.");
         }
 
         if (customer.getName() == null || customer.getName().trim().isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"Name is required.\"}")
-                    .build();
+            throw new InvalidInputException("Name is required.");
         }
 
         if (!customer.getName().matches("^[A-Za-z ]+$")) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"Invalid name. Name should contain only letters and spaces.\"}")
-                    .build();
+            throw new InvalidInputException("Invalid name. Name should contain only letters and spaces.");
         }
 
         if (customer.getEmail() == null || customer.getEmail().trim().isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"Email is required.\"}")
-                    .build();
+            throw new InvalidInputException("Email is required.");
         }
 
         if (!customer.getEmail().matches("^[\\w.-]+@[\\w.-]+\\.\\w{2,}$")) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"Email format is invalid.\"}")
-                    .build();
+            throw new InvalidInputException("Email format is invalid.");
         }
 
         String passwordStr = String.valueOf(customer.getPassword());
         if (passwordStr.length() < 6) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"Password must be at least 6 digits long.\"}")
-                    .build();
+            throw new InvalidInputException("Password must be at least 6 characters long.");
         }
 
         if (CustomerDataStore.getCustomerByEmail(customer.getEmail()) != null) {
@@ -114,8 +91,6 @@ public class CustomerResource {
         }
 
         CustomerDataStore.addCustomer(customer);
-
-
         return Response.status(Response.Status.CREATED)
                 .entity("{\"message\":\"Customer successfully added.\"}")
                 .build();
@@ -130,47 +105,33 @@ public class CustomerResource {
             Customer updatedCustomer) {
 
         if (updatedCustomer == null) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"Updated customer object is missing.\"}")
-                    .build();
+            throw new InvalidInputException("Updated customer object is missing.");
         }
 
         if (updatedCustomer.getName() == null || updatedCustomer.getName().trim().isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"New name is required.\"}")
-                    .build();
+            throw new InvalidInputException("New name is required.");
         }
 
         if (!updatedCustomer.getName().matches("^[A-Za-z ]+$")) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"Invalid name. Only letters and spaces allowed.\"}")
-                    .build();
+            throw new InvalidInputException("Invalid name. Only letters and spaces allowed.");
         }
 
         if (updatedCustomer.getEmail() == null || updatedCustomer.getEmail().trim().isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"New email is required.\"}")
-                    .build();
+            throw new InvalidInputException("New email is required.");
         }
 
         if (!updatedCustomer.getEmail().matches("^[\\w.-]+@[\\w.-]+\\.\\w{2,}$")) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"New email format is invalid.\"}")
-                    .build();
+            throw new InvalidInputException("New email format is invalid.");
         }
 
         String passwordStr = String.valueOf(updatedCustomer.getPassword());
         if (passwordStr.length() < 6) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"Password must be at least 6 characters long.\"}")
-                    .build();
+            throw new InvalidInputException("Password must be at least 6 characters long.");
         }
 
         Customer existing = CustomerDataStore.getCustomer(name, email);
         if (existing == null) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"error\":\"Customer not found.\"}")
-                    .build();
+            throw new CustomerNotFoundException("Customer not found.");
         }
 
         if (!password.equals(existing.getPassword())) {
@@ -180,7 +141,6 @@ public class CustomerResource {
         }
 
         CustomerDataStore.updateCustomer(name, email, updatedCustomer);
-
         return Response.status(Response.Status.OK)
                 .entity("{\"message\":\"Customer updated successfully.\"}")
                 .build();
@@ -189,17 +149,14 @@ public class CustomerResource {
     @DELETE
     @Path("/delete/{name}/{email}")
     public Response removeCustomer(@PathParam("name") String name, @PathParam("email") String email) {
+
         if (name == null || name.trim().isEmpty() || email == null || email.trim().isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"Name and email are required.\"}")
-                    .build();
+            throw new InvalidInputException("Name and email are required.");
         }
 
         Customer customer = CustomerDataStore.getCustomer(name, email);
         if (customer == null) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"error\":\"Customer not found.\"}")
-                    .build();
+            throw new CustomerNotFoundException("Customer not found.");
         }
 
         CustomerDataStore.removeCustomer(name, email);

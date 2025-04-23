@@ -11,7 +11,7 @@ public class Customer {
         this.name = name;
         this.email = email;
         this.password = password;
-        //this.cart = new Cart(email);
+
     }
     public String getName() {return name;}
     public String getEmail() {return email;}

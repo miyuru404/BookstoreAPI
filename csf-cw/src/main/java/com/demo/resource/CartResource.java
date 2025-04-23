@@ -5,6 +5,8 @@ import com.demo.dataModel.CartDataStore;
 import com.demo.dataModel.CustomerDataStore;
 import com.demo.model.*;
 
+import com.demo.exception.*;
+
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -16,120 +18,70 @@ import java.util.List;
 @Consumes(MediaType.APPLICATION_JSON)
 public class CartResource {
 
-
     @GET
     @Path("/getcart/{email}")
     public Response getCartByCustomer(@PathParam("email") String email) {
         Customer customer = CustomerDataStore.getCustomerByEmail(email);
-
-        if (customer == null) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"error\":\"Customer not found!\"}").build();
-        }
+        if (customer == null) throw new CustomerNotFoundException("Customer not found!");
 
         Cart cart = CartDataStore.getCart(email);
-        if (cart == null) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"error\":\"Cart not found!\"}").build();
-        }
+        if (cart == null) throw new CartNotFoundException("Cart not found!");
 
-        return Response.status(Response.Status.OK).entity(cart).build();
+        return Response.ok(cart).build();
     }
 
     @POST
     @Path("/addBook/{email}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     public Response addBookToCart(@PathParam("email") String email, BookInput input) {
         Customer customer = CustomerDataStore.getCustomerByEmail(email);
+        if (customer == null) throw new CustomerNotFoundException("Customer not found!");
 
-        if (customer == null) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"error\":\"Customer not found!\"}").build();
-        }
-
-        if (input.ISBN == null || input.ISBN.trim().isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"ISBN is required.\"}").build();
-        }
-
-        if (input.title == null || input.title.trim().isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"Title is required.\"}").build();
-        }
-
-        if (input.author == null || input.author.trim().isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"Author is required.\"}").build();
-        }
+        validateBookInput(input);
 
         Book book = BookDataStore.getBook(input.title, input.author, input.ISBN);
-        if (book == null) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"error\":\"Book not found in database.\"}").build();
-        }
+        if (book == null) throw new BookNotFoundException("Book not found in database.");
 
         Cart cart = CartDataStore.getCart(email);
-
         cart.addItem(book);
-        return Response.status(Response.Status.OK)
-                .entity("{\"message\":\"Book added to cart.\"}").build();
+
+        return Response.ok("{\"message\":\"Book added to cart.\"}").build();
     }
 
     @GET
     @Path("/all")
     public Response getAllCarts() {
         List<Cart> carts = CartDataStore.getAllCarts();
-        return Response.status(Response.Status.OK).entity(carts).build();
+        return Response.ok(carts).build();
     }
 
     @POST
     @Path("/removeBook/{email}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     public Response removeBook(@PathParam("email") String email, BookInput input) {
         Customer customer = CustomerDataStore.getCustomerByEmail(email);
+        if (customer == null) throw new CustomerNotFoundException("Customer not found!");
 
-        if (customer == null) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"error\":\"Customer not found!\"}").build();
-        }
-
-        if (input.ISBN == null || input.ISBN.trim().isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"ISBN is required.\"}").build();
-        }
-
-        if (input.title == null || input.title.trim().isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"Title is required.\"}").build();
-        }
-
-        if (input.author == null || input.author.trim().isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"Author is required.\"}").build();
-        }
+        validateBookInput(input);
 
         Book book = BookDataStore.getBook(input.title, input.author, input.ISBN);
-        if (book == null) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"error\":\"Book not found in database.\"}").build();
-        }
+        if (book == null) throw new BookNotFoundException("Book not found in database.");
 
         Cart cart = CartDataStore.getCart(email);
-
         if (cart == null || cart.getItems() == null || cart.getItems().isEmpty()) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"error\":\"No books found in the cart.\"}").build();
+            throw new BookNotFoundException("No books found in the cart.");
         }
 
         cart.removeItem(book);
-
-        return Response.status(Response.Status.OK)
-                .entity("{\"message\":\"Book has been removed from the cart.\"}").build();
-
+        return Response.ok("{\"message\":\"Book has been removed from the cart.\"}").build();
     }
 
+    private void validateBookInput(BookInput input) {
+        if (input.ISBN == null || input.ISBN.trim().isEmpty())
+            throw new InvalidInputException("ISBN is required.");
+        if (input.title == null || input.title.trim().isEmpty())
+            throw new InvalidInputException("Title is required.");
+        if (input.author == null || input.author.trim().isEmpty())
+            throw new InvalidInputException("Author is required.");
+    }
 }
 
 class BookInput {
@@ -137,4 +89,3 @@ class BookInput {
     public String author;
     public String ISBN;
 }
-

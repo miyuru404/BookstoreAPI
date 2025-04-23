@@ -2,160 +2,102 @@ package com.demo.resource;
 
 import com.demo.model.Book;
 import com.demo.dataModel.BookDataStore;
+import com.demo.exception.BookNotFoundException;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
-import java.util.List;
-
-//import static com.demo.dataModel.BookDataStore.books;
 
 @Path("/books")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class BookResource {
 
-
-
-    //  Get book by ISBN
     @GET
     @Path("/getBook/{isbn}")
     public Response getBookByISBN(@PathParam("isbn") String isbn) {
         if (BookDataStore.getAllBooks().isEmpty()) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"error\":\"No books have been added to the database\"}").build();
+            throw new BookNotFoundException("No books have been added to the database.");
         }
 
         Book book = BookDataStore.getBook(isbn);
         if (book == null) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"error\":\"Book not found\"}").build();
+            throw new BookNotFoundException("Book not found.");
         }
 
         return Response.ok(book).build();
     }
 
-    // add book
     @POST
     @Path("/addBook")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     public Response addBook(Book book) {
-        if (book == null) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"Book data is missing or malformed.\"}").build();
-        }
+        if (book == null) throw new BookNotFoundException("Book data is missing or malformed.");
 
-        // Validate required fields
-        if (book.getISBN() == null || book.getISBN().trim().isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"ISBN is required.\"}").build();
-        }
+        if (book.getISBN() == null || book.getISBN().trim().isEmpty())
+            throw new BookNotFoundException("ISBN is required.");
 
-        if (book.getTitle() == null || book.getTitle().trim().isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"Title is required.\"}").build();
-        }
+        if (book.getTitle() == null || book.getTitle().trim().isEmpty())
+            throw new BookNotFoundException("Title is required.");
 
-        if (book.getAuthor() == null || book.getAuthor().trim().isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"Author is required.\"}").build();
-        }
+        if (book.getAuthor() == null || book.getAuthor().trim().isEmpty())
+            throw new BookNotFoundException("Author is required.");
 
-        if (book.getPublicationYear() <= 0) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"Publication year must be a valid year.\"}").build();
-        }
+        if (book.getPublicationYear() <= 0)
+            throw new BookNotFoundException("Publication year must be a valid year.");
 
-        if (book.getPrice() <= 0) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"Price must be valid prize.\"}").build();
-        }
+        if (book.getPrice() <= 0)
+            throw new BookNotFoundException("Price must be valid prize.");
 
-        if (book.getStockQuantity() <= 0) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"At least 1 book needs to be added to stock.\"}").build();
-        }
+        if (book.getStockQuantity() <= 0)
+            throw new BookNotFoundException("At least 1 book needs to be added to stock.");
 
+        if (BookDataStore.getBook(book.getISBN()) != null)
+            throw new BookNotFoundException("A book with this ISBN already exists.");
 
-        // Check for duplicates by ISBN
-        if (BookDataStore.getBook(book.getISBN()) != null) {
-            return Response.status(Response.Status.CONFLICT)
-                    .entity("{\"error\":\"A book with this ISBN already exists.\"}").build();
-        }
-
-        // Add the book
         BookDataStore.addBook(book);
         return Response.status(Response.Status.CREATED)
                 .entity("{\"message\":\"Book added successfully.\"}").build();
     }
 
-
-
-
-    //  Update a book
     @PUT
     @Path("/updateBook/{isbn}")
     public Response updateBook(@PathParam("isbn") String isbn, Book updatedBook) {
+        if (updatedBook == null)
+            throw new BookNotFoundException("Book data is missing or malformed.");
 
-        if (updatedBook == null) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"Book data is missing or malformed.\"}").build();
-        }
+        if (updatedBook.getISBN() == null || updatedBook.getISBN().trim().isEmpty())
+            throw new BookNotFoundException("ISBN is required.");
 
-        // Validate required fields
-        if (updatedBook.getISBN() == null || updatedBook.getISBN().trim().isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"ISBN is required.\"}").build();
-        }
+        if (updatedBook.getTitle() == null || updatedBook.getTitle().trim().isEmpty())
+            throw new BookNotFoundException("Title is required.");
 
-        if (updatedBook.getTitle() == null || updatedBook.getTitle().trim().isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"Title is required.\"}").build();
-        }
+        if (updatedBook.getAuthor() == null || updatedBook.getAuthor().trim().isEmpty())
+            throw new BookNotFoundException("Author is required.");
 
-        if (updatedBook.getAuthor() == null || updatedBook.getAuthor().trim().isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"Author is required.\"}").build();
-        }
+        if (updatedBook.getPublicationYear() <= 0)
+            throw new BookNotFoundException("Publication year must be a valid year.");
 
-        if (updatedBook.getPublicationYear() <= 0) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"Publication year must be a valid year.\"}").build();
-        }
+        if (updatedBook.getPrice() <= 0)
+            throw new BookNotFoundException("Price must be valid prize.");
 
-        if (updatedBook.getPrice() <= 0) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"Price must be valid prize.\"}").build();
-        }
+        if (updatedBook.getStockQuantity() <= 0)
+            throw new BookNotFoundException("At least 1 book needs to be added to stock.");
 
-        if (updatedBook.getStockQuantity() <= 0) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"At least 1 book needs to be added to stock.\"}").build();
-        }
+        Book existingBook = BookDataStore.getBook(isbn);
+        if (existingBook == null)
+            throw new BookNotFoundException("Book not found.");
 
-        Book book = BookDataStore.getBook(isbn);
-
-        if (book == null) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"error\":\"Book not found\"}").build();
-        }
-
-        BookDataStore.updateBook(book.getTitle(), book.getAuthor(), book.getISBN(),updatedBook);
+        BookDataStore.updateBook(existingBook.getTitle(), existingBook.getAuthor(), existingBook.getISBN(), updatedBook);
 
         return Response.ok("{\"message\":\"Book updated successfully\"}").build();
     }
 
-    //  Delete a book
     @DELETE
     @Path("/deleteBook/{isbn}")
     public Response deleteBook(@PathParam("isbn") String isbn) {
         Book book = BookDataStore.getBook(isbn);
-        if (book == null) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"error\":\"Book not found\"}").build();
-        }
+        if (book == null)
+            throw new BookNotFoundException("Book not found.");
 
         BookDataStore.removeBook(book.getTitle(), book.getAuthor(), book.getISBN());
         return Response.ok("{\"message\":\"Book deleted successfully\"}").build();
