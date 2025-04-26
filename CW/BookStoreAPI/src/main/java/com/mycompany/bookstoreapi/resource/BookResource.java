@@ -1,28 +1,18 @@
-package com.demo.resource;
+package com.mycompany.bookstoreapi.resource;
 
 
-import com.demo.dataModel.BookDataStore;
-import com.demo.exception.BookNotFoundException;
-import com.demo.model.Book;
-import com.sun.research.ws.wadl.Response;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import com.mycompany.bookstoreapi.dataModel.BookDataStore;
+import com.mycompany.bookstoreapi.exception.BookNotFoundException;
+import com.mycompany.bookstoreapi.model.Book;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 @Path("/books")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class BookResource {
-
-
-
-    @GET
-    @Path("/test")
-    public Response testException() {
-        throw new BookNotFoundException("Test: book not found");
-    }
-
-
 
     @GET
     @Path("/getBook/{isbn}")

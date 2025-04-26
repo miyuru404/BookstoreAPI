@@ -1,11 +1,11 @@
-package com.demo.exception.exceptionMapper;
+package com.mycompany.bookstoreapi.exception.exceptionMapper;
 
-import com.demo.exception.CustomerNotFoundException;
+
+import com.mycompany.bookstoreapi.exception.CustomerNotFoundException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
-import jakarta.ws.rs.ext.Provider;
 
-@Provider
+
 public class CustomerNotFoundExceptionMapper implements ExceptionMapper<CustomerNotFoundException> {
     @Override
     public Response toResponse(CustomerNotFoundException ex) {

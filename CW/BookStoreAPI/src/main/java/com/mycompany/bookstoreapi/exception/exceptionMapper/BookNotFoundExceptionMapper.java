@@ -1,11 +1,10 @@
-package com.demo.exception.exceptionMapper;
+package com.mycompany.bookstoreapi.exception.exceptionMapper;
 
-import com.demo.exception.BookNotFoundException;
 
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
-
+import com.mycompany.bookstoreapi.exception.BookNotFoundException;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.ext.Provider;
 
 @Provider
 public class BookNotFoundExceptionMapper implements ExceptionMapper<BookNotFoundException> {

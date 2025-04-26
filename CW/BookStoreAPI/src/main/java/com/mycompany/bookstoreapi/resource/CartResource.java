@@ -1,20 +1,16 @@
-package com.demo.resource;
+package com.mycompany.bookstoreapi.resource;
 
-import com.demo.dataModel.BookDataStore;
-import com.demo.dataModel.CartDataStore;
-import com.demo.dataModel.CustomerDataStore;
-import com.demo.model.*;
+import com.mycompany.bookstoreapi.dataModel.BookDataStore;
+import com.mycompany.bookstoreapi.dataModel.CartDataStore;
+import com.mycompany.bookstoreapi.dataModel.CustomerDataStore;
+import com.mycompany.bookstoreapi.model.*;
+import com.mycompany.bookstoreapi.exception.*;
 
-import com.demo.exception.*;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import java.util.List;
 
 @Path("/carts")

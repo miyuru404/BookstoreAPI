@@ -1,4 +1,4 @@
-package com.demo.app;
+package com.mycompany.bookstoreapi.app;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import jakarta.ws.rs.ApplicationPath;

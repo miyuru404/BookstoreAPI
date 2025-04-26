@@ -1,6 +1,8 @@
-package com.demo.dataModel;
+package com.mycompany.bookstoreapi.dataModel;
 
-import com.demo.model.Order;
+
+
+import com.mycompany.bookstoreapi.model.Order;
 
 import java.util.ArrayList;
 import java.util.List;
